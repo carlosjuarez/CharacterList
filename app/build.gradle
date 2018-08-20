@@ -30,13 +30,13 @@ android {
     productFlavors {
         Simpsons {
             applicationId 'com.juvcarl.batch.mcs.simpsons'
-            buildConfigField('String','SEARCH_CONSTANT','"simpsons characters\"')
+            buildConfigField('String','SEARCH_CONSTANT','"simpsons characters"')
             dimension "version"
         }
 
         DesperateHousewifes {
             applicationId 'com.juvcarl.batch.mcs.desperatehousewifes'
-            buildConfigField('String','SEARCH_CONSTANT','"desperate housewifes characters"')
+            buildConfigField('String','SEARCH_CONSTANT','"desperate housewives characters"')
             dimension "version"
         }
     }

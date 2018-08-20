@@ -3,6 +3,8 @@ package com.juvcarl.batch.mcs.characterlist.view
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import com.juvcarl.batch.mcs.characterlist.App
@@ -41,6 +43,9 @@ class CharacterListActivity : AppCompatActivity() {
 
         if (item_detail_container != null) {
             twoPane = true
+            item_list.layoutManager = LinearLayoutManager(this)
+        } else {
+            item_list.layoutManager = GridLayoutManager(this, 2)
         }
 
         characterViewModel = CharacterViewModel.create(this)

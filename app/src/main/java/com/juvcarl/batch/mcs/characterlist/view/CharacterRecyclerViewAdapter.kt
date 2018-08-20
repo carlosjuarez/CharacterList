@@ -1,7 +1,6 @@
 package com.juvcarl.batch.mcs.characterlist.view
 
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -12,12 +11,17 @@ import android.widget.TextView
 import com.juvcarl.batch.mcs.characterlist.R
 import com.juvcarl.batch.mcs.characterlist.repository.model.RelatedTopic
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.item_list_content.view.*
+import kotlinx.android.synthetic.main.item_list_content_list.view.*
 
 class CharacterRecyclerViewAdapter(private val parentActivity: CharacterListActivity,
                                    private val values: List<RelatedTopic>?,
                                    private val twoPane: Boolean) :
-        RecyclerView.Adapter<CharacterRecyclerViewAdapter.ViewHolder>() {
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        const val GRID_VIEW_ITEM = 1
+        const val LINEAR_VIEW_ITEM = 2
+    }
 
     private val onClickListener: View.OnClickListener
 
@@ -43,17 +47,39 @@ class CharacterRecyclerViewAdapter(private val parentActivity: CharacterListActi
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_list_content, parent, false)
-        return ViewHolder(view)
+    override fun getItemViewType(position: Int): Int {
+        if (twoPane) {
+            return LINEAR_VIEW_ITEM
+        } else {
+            return GRID_VIEW_ITEM
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item : RelatedTopic? = values?.get(position)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (viewType == LINEAR_VIEW_ITEM) {
+            val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_list_content_list, parent, false)
+            return ViewHolderList(view)
+        } else {
+            val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_list_content_grid, parent, false)
+            return ViewHolderGrid(view)
+        }
+    }
 
-        holder.characterNameView.text = item.getCharacterName()
-        item?.icon?.url?.let { holder.characterIcon.setImageFromUrl(it) }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item : RelatedTopic? = values?.get(position)
+        when (holder.itemViewType) {
+            LINEAR_VIEW_ITEM -> {
+                (holder as ViewHolderList).characterNameView.text = item.getCharacterName()
+
+            }
+            GRID_VIEW_ITEM -> {
+                (holder as ViewHolderGrid).characterNameView.text = item.getCharacterName()
+                item?.icon?.url?.let { holder.characterIcon.setImageFromUrl(it) }
+            }
+        }
+
 
         with(holder.itemView) {
             tag = item
@@ -63,8 +89,12 @@ class CharacterRecyclerViewAdapter(private val parentActivity: CharacterListActi
 
     override fun getItemCount() = values?.size ?: 0
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val characterIcon : ImageView = view.character_icon
+    inner class ViewHolderList(view: View) : RecyclerView.ViewHolder(view) {
+        val characterNameView: TextView = view.character_name
+    }
+
+    inner class ViewHolderGrid(view: View) : RecyclerView.ViewHolder(view) {
+        val characterIcon: ImageView = view.findViewById(R.id.character_icon)
         val characterNameView: TextView = view.character_name
     }
 }
@@ -85,5 +115,5 @@ fun RelatedTopic?.getCharacterName(): String {
 }
 
 fun RelatedTopic?.getCharacterDescription(): String? {
-    return this?.text?.indexOf(" - ")?.let { text?.substring(it) } ?: ""
+    return this?.text?.indexOf("-")?.let { text?.substring(it + 1)?.trim() } ?: ""
 }

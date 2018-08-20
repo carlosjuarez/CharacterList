@@ -37,8 +37,8 @@ class CharacterDetailActivity : AppCompatActivity() {
             // using a fragment transaction.
             val fragment = CharacterDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString(CharacterDetailFragment.CHARACTER,
-                            intent.getStringExtra(CharacterDetailFragment.CHARACTER))
+                    putParcelable(CharacterDetailFragment.CHARACTER,
+                            intent.getParcelableExtra(CharacterDetailFragment.CHARACTER))
                 }
             }
 
