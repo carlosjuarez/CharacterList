@@ -1,0 +1,86 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        applicationId "com.juvcarl.batch.mcs.characterlist"
+        minSdkVersion 24
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "version"
+
+    productFlavors {
+        Simpsons {
+            applicationId 'com.juvcarl.batch.mcs.simpsons'
+            buildConfigField('String','SEARCH_CONSTANT','"simpsons characters\"')
+            dimension "version"
+        }
+
+        DesperateHousewifes {
+            applicationId 'com.juvcarl.batch.mcs.desperatehousewifes'
+            buildConfigField('String','SEARCH_CONSTANT','"desperate housewifes characters"')
+            dimension "version"
+        }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:exifinterface:28.0.0-rc01'
+    }
+}
+
+ext.arch_runtime_version = "1.1.1"
+ext.arch_version = "1.1.1"
+ext.dagger_version = '2.12'
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:28.0.0-rc01'
+    implementation 'com.android.support:support-v4:28.0.0-rc01'
+    implementation 'com.android.support:recyclerview-v7:28.0.0-rc01'
+    implementation 'com.android.support:design:28.0.0-rc01'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+
+    //architecture components
+    implementation "android.arch.lifecycle:runtime:$arch_runtime_version"
+    implementation "android.arch.lifecycle:extensions:$arch_version"
+    implementation "android.arch.lifecycle:reactivestreams:$arch_version"
+    kapt "android.arch.lifecycle:compiler:$arch_version"
+
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //Dagger
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+}
+
+androidExtensions {
+    experimental = true
+}
